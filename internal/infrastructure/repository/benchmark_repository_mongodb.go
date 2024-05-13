@@ -1,11 +1,23 @@
 package repository
 
 import (
+	"context"
+	"time"
+
 	"github.com/didiegovieira/go-benchmark-api/internal/domain/entity"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type BenchmarkModelMongodb struct {
+	Id      string          `json:"id" bson:"_id"`
+	Type    entity.Type     `json:"type" bson:"type"`
+	Data    []int           `json:"data" bson:"data"`
+	Results []entity.Result `json:"results" bson:"results"`
+	Fast    entity.Result   `json:"fast" bson:"fast"`
+	Slow    entity.Result   `json:"slow" bson:"slow"`
+	Date    time.Time       `json:"date" bson:"date`
 }
 
 type BenchmarkRepositoryMongodb struct {
@@ -20,14 +32,54 @@ func NewBenchmarkRepositoryMongodb(client *mongo.Client, database string) *Bench
 	}
 }
 
-func (b *BenchmarkRepositoryMongodb) entityToModel() (benchmark *BenchmarkModelMongodb) {
-	return nil
+func (b *BenchmarkRepositoryMongodb) entityToModel(benchmarkEntity *entity.Benchmark) (benchmark BenchmarkModelMongodb) {
+	return BenchmarkModelMongodb{
+		Id:      benchmarkEntity.Id,
+		Type:    benchmarkEntity.Type,
+		Data:    benchmarkEntity.Data,
+		Results: benchmarkEntity.Results,
+		Fast:    benchmarkEntity.Fast,
+		Slow:    benchmarkEntity.Slow,
+		Date:    benchmarkEntity.Date,
+	}
 }
 
-func (b *BenchmarkRepositoryMongodb) modelToEntity() (benchmark *entity.Benchmark) {
-	return nil
+func (b *BenchmarkRepositoryMongodb) modelToEntity(benchmarkModel *BenchmarkModelMongodb) (benchmark *entity.Benchmark) {
+	return &entity.Benchmark{
+		Id:      benchmarkModel.Id,
+		Type:    benchmarkModel.Type,
+		Data:    benchmarkModel.Data,
+		Results: benchmarkModel.Results,
+		Fast:    benchmarkModel.Fast,
+		Slow:    benchmarkModel.Slow,
+		Date:    benchmarkModel.Date,
+	}
 }
 
-func (b *BenchmarkRepositoryMongodb) Save() error {
+func (o *BenchmarkRepositoryMongodb) Get(Id string) (*entity.Benchmark, error) {
+	var result BenchmarkModelMongodb
+
+	if err := o.collection.FindOne(context.Background(), bson.M{"_id": Id}).Decode(&result); err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, nil
+		}
+
+		return nil, err
+	}
+
+	return o.modelToEntity(&result), nil
+}
+
+func (b *BenchmarkRepositoryMongodb) Save(benchmark *entity.Benchmark) error {
+	filter := bson.M{"_id": benchmark.Id}
+
+	_, err := b.collection.ReplaceOne(
+		context.Background(), filter, b.entityToModel(benchmark), options.Replace().SetUpsert(true),
+	)
+
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
