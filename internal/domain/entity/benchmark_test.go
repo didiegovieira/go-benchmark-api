@@ -17,7 +17,7 @@ func TestBenchmarkNewBenchmark(t *testing.T) {
 
 	assert.NotNil(t, benchmark)
 	assert.NotEmpty(t, benchmark.Id)
-	assert.Equal(t, benchmarkType, benchmark.Type)
+	assert.Equal(t, benchmarkType, benchmark.BenchmarkName)
 	assert.Equal(t, data, benchmark.Data)
 	assert.Empty(t, benchmark.Results)
 	assert.True(t, benchmark.Date.Before(time.Now()))
@@ -31,7 +31,7 @@ func TestBenchmarkNewBenchmarkSerialization(t *testing.T) {
 
 	assert.NotNil(t, benchmark)
 	assert.NotEmpty(t, benchmark.Id)
-	assert.Equal(t, benchmarkType, benchmark.Type)
+	assert.Equal(t, benchmarkType, benchmark.BenchmarkName)
 	assert.Equal(t, data, benchmark.Data)
 	assert.Empty(t, benchmark.Results)
 	assert.True(t, benchmark.Date.Before(time.Now()))

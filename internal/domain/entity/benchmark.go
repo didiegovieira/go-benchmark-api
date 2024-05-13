@@ -6,21 +6,21 @@ import (
 	"github.com/google/uuid"
 )
 
-type Type string
+type BenchmarkName string
 
 const (
-	SortingAlgorithm Type = "sorting_algorithm"
-	Serialization    Type = "serialization"
+	SortingAlgorithm BenchmarkName = "sorting_algorithm"
+	Serialization    BenchmarkName = "serialization"
 )
 
 type Benchmark struct {
-	Id      string    `json:"id"`
-	Type    Type      `json:"type"`
-	Data    []int     `json:"data"`
-	Results []Result  `json:"results"`
-	Fast    Result    `json:"fast"`
-	Slow    Result    `json:"slow"`
-	Date    time.Time `json:"date"`
+	Id            string        `json:"id"`
+	BenchmarkName BenchmarkName `json:"benchmark_name"`
+	Data          []int         `json:"data"`
+	Results       []Result      `json:"results"`
+	Fast          Result        `json:"fast"`
+	Slow          Result        `json:"slow"`
+	Date          time.Time     `json:"date"`
 }
 
 type Result struct {
@@ -28,12 +28,12 @@ type Result struct {
 	Duration time.Duration `json:"duration"`
 }
 
-func (b *Benchmark) NewBenchmark(t Type, data []int) *Benchmark {
+func (b *Benchmark) NewBenchmark(t BenchmarkName, data []int) *Benchmark {
 	return &Benchmark{
-		Id:      uuid.New().String(),
-		Type:    t,
-		Data:    data,
-		Results: []Result{},
-		Date:    time.Now(),
+		Id:            uuid.New().String(),
+		BenchmarkName: t,
+		Data:          data,
+		Results:       []Result{},
+		Date:          time.Now(),
 	}
 }
