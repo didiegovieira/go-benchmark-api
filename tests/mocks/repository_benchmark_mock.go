@@ -12,6 +12,7 @@ package mocks
 import (
 	reflect "reflect"
 
+	entity "github.com/didiegovieira/go-benchmark-api/internal/domain/entity"
 	gomock "go.uber.org/mock/gomock"
 )
 
@@ -38,16 +39,46 @@ func (m *MockBenchmarkRepositoryInterface) EXPECT() *MockBenchmarkRepositoryInte
 	return m.recorder
 }
 
-// Save mocks base method.
-func (m *MockBenchmarkRepositoryInterface) Save() error {
+// Get mocks base method.
+func (m *MockBenchmarkRepositoryInterface) Get(id string) (*entity.Benchmark, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Save")
+	ret := m.ctrl.Call(m, "Get", id)
+	ret0, _ := ret[0].(*entity.Benchmark)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Get indicates an expected call of Get.
+func (mr *MockBenchmarkRepositoryInterfaceMockRecorder) Get(id any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockBenchmarkRepositoryInterface)(nil).Get), id)
+}
+
+// GetAll mocks base method.
+func (m *MockBenchmarkRepositoryInterface) GetAll(benchmarkName string) ([]*entity.Benchmark, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAll", benchmarkName)
+	ret0, _ := ret[0].([]*entity.Benchmark)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAll indicates an expected call of GetAll.
+func (mr *MockBenchmarkRepositoryInterfaceMockRecorder) GetAll(benchmarkName any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAll", reflect.TypeOf((*MockBenchmarkRepositoryInterface)(nil).GetAll), benchmarkName)
+}
+
+// Save mocks base method.
+func (m *MockBenchmarkRepositoryInterface) Save(benchmark *entity.Benchmark) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Save", benchmark)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Save indicates an expected call of Save.
-func (mr *MockBenchmarkRepositoryInterfaceMockRecorder) Save() *gomock.Call {
+func (mr *MockBenchmarkRepositoryInterfaceMockRecorder) Save(benchmark any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Save", reflect.TypeOf((*MockBenchmarkRepositoryInterface)(nil).Save))
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Save", reflect.TypeOf((*MockBenchmarkRepositoryInterface)(nil).Save), benchmark)
 }

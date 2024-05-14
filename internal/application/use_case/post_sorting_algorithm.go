@@ -60,6 +60,13 @@ func (s *PostSortingAlgorithmUseCase) Execute(arr []int) (*entity.Benchmark, err
 	return b, err
 }
 
+func (s *PostSortingAlgorithmUseCase) initBenchmark(bn entity.BenchmarkName, arr []int) *entity.Benchmark {
+	b := &entity.Benchmark{}
+	b.NewBenchmark(bn, arr)
+
+	return b
+}
+
 func (s *PostSortingAlgorithmUseCase) saveToDatabase(b *entity.Benchmark) error {
 	err := s.repository.Save(b)
 	if err != nil {
@@ -67,13 +74,6 @@ func (s *PostSortingAlgorithmUseCase) saveToDatabase(b *entity.Benchmark) error 
 	}
 
 	return nil
-}
-
-func (s *PostSortingAlgorithmUseCase) initBenchmark(bn entity.BenchmarkName, arr []int) *entity.Benchmark {
-	b := &entity.Benchmark{}
-	b.NewBenchmark(bn, arr)
-
-	return b
 }
 
 func (s *PostSortingAlgorithmUseCase) calculateExecutionTimes(b *entity.Benchmark, arr []int) {

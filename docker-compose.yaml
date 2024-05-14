@@ -1,18 +1,23 @@
 version: '3.3'
 services:
   mongodb:
+    container_name: mongodb
     image: mongo
     ports:
       - "27017:27017"
     volumes:
       - mongodb_data:/data/db
 
-  app:
+  go-app:
+    container_name: go-app
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "3000:3000"
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017/
+      - MONGODB_DATABASE=benchmark
     depends_on:
       - mongodb
 

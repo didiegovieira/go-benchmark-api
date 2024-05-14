@@ -1,12 +1,14 @@
 package main
 
-// func main() {
-// 	di, err := InitializeDependencyContainer()
-// 	if err != nil {
-// 		panic(err)
-// 	}
+import "github.com/didiegovieira/go-benchmark-api/internal/infrastructure/api"
 
-// 	http := api.NewServer("3000")
-// 	http.RegisterRoutes(di.Routes)
-// 	http.Start()
-// }
+func main() {
+	di, err := InitializeDependencyContainer()
+	if err != nil {
+		panic(err)
+	}
+
+	http := api.NewServer("3000")
+	http.RegisterRoutes(di.Routes)
+	http.Start()
+}
