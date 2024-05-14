@@ -16,10 +16,14 @@ func (s *TimeCalculateUseCase) Execute(fn func(), name string) entity.Result {
 	start := time.Now()
 	fn()
 
-	resultTime := entity.Result{
-		Name:     name,
-		Duration: time.Since(start),
-	}
+	resultTime := s.creatingResultEntity(name, time.Since(start))
 
 	return resultTime
+}
+
+func (s *TimeCalculateUseCase) creatingResultEntity(name string, duration time.Duration) entity.Result {
+	return entity.Result{
+		Name:     name,
+		Duration: duration,
+	}
 }

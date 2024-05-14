@@ -1,9 +1,11 @@
 package usecase
 
 import (
+	"sort"
+
+	"github.com/didiegovieira/go-benchmark-api/internal/application/repository"
 	sortingalgorithm "github.com/didiegovieira/go-benchmark-api/internal/application/use_case/sorting_algorithm"
 	"github.com/didiegovieira/go-benchmark-api/internal/domain/entity"
-	"github.com/sirupsen/logrus"
 )
 
 type SortingAlgorithm string
@@ -19,11 +21,13 @@ const (
 type AlgorithmFunc func(arr []int) []int
 
 type PostSortingAlgorithmUseCase struct {
+	repository           repository.BenchmarkRepositoryInterface
 	timeCalculateUseCase TimeCalculateUseCaseInterface
 	sortingAlgorithms    map[SortingAlgorithm]AlgorithmFunc
 }
 
 func NewPostSortingAlgorithmUseCase(
+	repository repository.BenchmarkRepositoryInterface,
 	timeCalculateUseCase TimeCalculateUseCaseInterface,
 	bubbleSortUseCase sortingalgorithm.BubbleSortUseCaseInterface,
 	insertionSortUseCase sortingalgorithm.InsertionSortUseCaseInterface,
@@ -32,6 +36,7 @@ func NewPostSortingAlgorithmUseCase(
 	selectionSortUseCase sortingalgorithm.SelectionSortUseCaseInterface,
 ) *PostSortingAlgorithmUseCase {
 	return &PostSortingAlgorithmUseCase{
+		repository:           repository,
 		timeCalculateUseCase: timeCalculateUseCase,
 		sortingAlgorithms: map[SortingAlgorithm]AlgorithmFunc{
 			BubbleSort:    bubbleSortUseCase.Execute,
@@ -43,40 +48,51 @@ func NewPostSortingAlgorithmUseCase(
 	}
 }
 
-func (s *PostSortingAlgorithmUseCase) Execute(arr []int) (b *entity.Benchmark) {
-	b = b.NewBenchmark("sorting_algorithm", arr)
-	s.timeCalculate(b, arr)
-	s.fastAndSlow(b)
+func (s *PostSortingAlgorithmUseCase) Execute(arr []int) (*entity.Benchmark, error) {
+	b := s.initBenchmark(entity.SortingAlgorithm, arr)
 
-	logrus.Println("Fast: " + b.Fast.Name + " - " + b.Fast.Duration.String())
-	logrus.Println("Slow: " + b.Slow.Name + " - " + b.Slow.Duration.String())
+	s.calculateExecutionTimes(b, arr)
+
+	s.findFastestAndSlowest(b)
+
+	err := s.saveToDatabase(b)
+
+	return b, err
+}
+
+func (s *PostSortingAlgorithmUseCase) saveToDatabase(b *entity.Benchmark) error {
+	err := s.repository.Save(b)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (s *PostSortingAlgorithmUseCase) initBenchmark(bn entity.BenchmarkName, arr []int) *entity.Benchmark {
+	b := &entity.Benchmark{}
+	b.NewBenchmark(bn, arr)
 
 	return b
 }
 
-func (s *PostSortingAlgorithmUseCase) timeCalculate(b *entity.Benchmark, arr []int) {
+func (s *PostSortingAlgorithmUseCase) calculateExecutionTimes(b *entity.Benchmark, arr []int) {
 	for algo, fn := range s.sortingAlgorithms {
 		result := s.timeCalculateUseCase.Execute(func() {
 			fn(arr)
 		}, string(algo))
+
 		b.Results = append(b.Results, result)
 	}
 }
 
-func (s *PostSortingAlgorithmUseCase) fastAndSlow(b *entity.Benchmark) {
-	fast := b.Results[0]
-	slow := b.Results[0]
+func (s *PostSortingAlgorithmUseCase) findFastestAndSlowest(b *entity.Benchmark) {
+	results := append([]entity.Result(nil), b.Results...)
 
-	for _, result := range b.Results {
-		if result.Duration < fast.Duration {
-			fast = result
-		}
+	sort.Slice(results, func(i, j int) bool {
+		return results[i].Duration < results[j].Duration
+	})
 
-		if result.Duration > slow.Duration {
-			slow = result
-		}
-	}
-
-	b.Fast = fast
-	b.Slow = slow
+	b.Fast = results[0]
+	b.Slow = results[len(results)-1]
 }

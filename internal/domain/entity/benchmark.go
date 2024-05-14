@@ -28,10 +28,10 @@ type Result struct {
 	Duration time.Duration `json:"duration"`
 }
 
-func (b *Benchmark) NewBenchmark(t BenchmarkName, data []int) *Benchmark {
+func (b *Benchmark) NewBenchmark(bn BenchmarkName, data []int) *Benchmark {
 	return &Benchmark{
 		Id:            uuid.New().String(),
-		BenchmarkName: t,
+		BenchmarkName: bn,
 		Data:          data,
 		Results:       []Result{},
 		Date:          time.Now(),

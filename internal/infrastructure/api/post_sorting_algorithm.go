@@ -1,6 +1,7 @@
 package api
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/didiegovieira/go-benchmark-api/internal/application/dto"
@@ -33,11 +34,17 @@ func (u *PostSortingAlgorithmRoute) getHandler() func(c *gin.Context) {
 			return
 		}
 
-		u.PostSortingAlgorithmUseCase.Execute(request.Arr)
+		b, err := u.PostSortingAlgorithmUseCase.Execute(request.Arr)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
 
 		c.JSON(http.StatusOK, gin.H{
 			"message": "Sorting Algorithm",
 			"status":  200,
+			"result":  fmt.Sprintf("Fastest: %s\nSlowest: %s", b.Fast, b.Slow),
+			"data":    b,
 		})
 	}
 }

@@ -7,12 +7,11 @@ import (
 	"github.com/didiegovieira/go-benchmark-api/internal/domain/entity"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type BenchmarkModelMongodb struct {
 	Id            string               `json:"id" bson:"_id"`
-	BenchmarkName entity.BenchmarkName `json:"type" bson:"type"`
+	BenchmarkName entity.BenchmarkName `json:"benchmark_name" bson:"benchmark_name"`
 	Data          []int                `json:"data" bson:"data"`
 	Results       []entity.Result      `json:"results" bson:"results"`
 	Fast          entity.Result        `json:"fast" bson:"fast"`
@@ -102,12 +101,7 @@ func (o *BenchmarkRepositoryMongodb) GetAll(benchmarkName string) ([]*entity.Ben
 }
 
 func (b *BenchmarkRepositoryMongodb) Save(benchmark *entity.Benchmark) error {
-	filter := bson.M{"_id": benchmark.Id}
-
-	_, err := b.collection.ReplaceOne(
-		context.Background(), filter, b.entityToModel(benchmark), options.Replace().SetUpsert(true),
-	)
-
+	_, err := b.collection.InsertOne(context.Background(), b.entityToModel(benchmark))
 	if err != nil {
 		return err
 	}
