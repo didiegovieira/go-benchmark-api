@@ -19,7 +19,7 @@ type PostSortingAlgorithmRoute struct {
 
 func NewPostSortingAlgorithmRoute(postSortingAlgorithmUseCase usecase.PostSortingAlgorithmUseCaseInterface) *PostSortingAlgorithmRoute {
 	return &PostSortingAlgorithmRoute{
-		path:                        "/sorting-algorithm",
+		path:                        "/benchmark/sort",
 		method:                      "POST",
 		PostSortingAlgorithmUseCase: postSortingAlgorithmUseCase,
 	}
