@@ -32,4 +32,11 @@ func TestMergeSortUseCaseExecute(t *testing.T) {
 	if !reflect.DeepEqual(result, expected) {
 		t.Errorf("Incorrect result. Expected: %v, Got: %v", expected, result)
 	}
+
+	arr = []int{}
+	expected = []int{}
+	result = mergeSortUseCase.Execute(arr)
+	if !reflect.DeepEqual(result, expected) {
+		t.Errorf("Incorrect result. Expected: %v, Got: %v", expected, result)
+	}
 }

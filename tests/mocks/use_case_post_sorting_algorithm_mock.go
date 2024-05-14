@@ -40,11 +40,12 @@ func (m *MockPostSortingAlgorithmUseCaseInterface) EXPECT() *MockPostSortingAlgo
 }
 
 // Execute mocks base method.
-func (m *MockPostSortingAlgorithmUseCaseInterface) Execute(arr []int) *entity.Benchmark {
+func (m *MockPostSortingAlgorithmUseCaseInterface) Execute(arr []int) (*entity.Benchmark, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Execute", arr)
 	ret0, _ := ret[0].(*entity.Benchmark)
-	return ret0
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // Execute indicates an expected call of Execute.

@@ -2,3 +2,5 @@
 .idea
 .envrc
 .tool-versions
+coverprofile.html
+coverprofile.out

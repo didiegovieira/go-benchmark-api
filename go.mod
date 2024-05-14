@@ -4,6 +4,7 @@ go 1.20
 
 require (
 	github.com/gin-gonic/gin v1.10.0
+	github.com/go-playground/assert/v2 v2.2.0
 	github.com/google/uuid v1.6.0
 	github.com/google/wire v0.6.0
 	github.com/knadh/koanf/parsers/dotenv v1.0.0
