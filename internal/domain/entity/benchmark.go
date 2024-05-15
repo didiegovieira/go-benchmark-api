@@ -35,3 +35,15 @@ func (b *Benchmark) NewBenchmark(bn BenchmarkName, data []int) {
 	b.Results = []Result{}
 	b.Date = time.Now()
 }
+
+func (b *Benchmark) AddResult(result Result) {
+	b.Results = append(b.Results, result)
+}
+
+func (b *Benchmark) SetFast(result Result) {
+	b.Fast = result
+}
+
+func (b *Benchmark) SetSlow(result Result) {
+	b.Slow = result
+}
