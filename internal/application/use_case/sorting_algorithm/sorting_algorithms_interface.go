@@ -1,5 +1,5 @@
 package sortingalgorithm
 
-type MergeSortUseCaseInterface interface {
+type SortingAlgorithmsInterface interface {
 	Execute(arr []int) []int
 }

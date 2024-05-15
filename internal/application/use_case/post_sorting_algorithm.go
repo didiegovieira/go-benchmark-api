@@ -18,32 +18,25 @@ const (
 	SelectionSort SortingAlgorithm = "SelectionSort"
 )
 
-type AlgorithmFunc func(arr []int) []int
-
 type PostSortingAlgorithmUseCase struct {
 	repository           repository.BenchmarkRepositoryInterface
 	timeCalculateUseCase TimeCalculateUseCaseInterface
-	sortingAlgorithms    map[SortingAlgorithm]AlgorithmFunc
+	sortingAlgorithms    map[SortingAlgorithm]sortingalgorithm.SortingAlgorithmsInterface
 }
 
 func NewPostSortingAlgorithmUseCase(
 	repository repository.BenchmarkRepositoryInterface,
 	timeCalculateUseCase TimeCalculateUseCaseInterface,
-	bubbleSortUseCase sortingalgorithm.BubbleSortUseCaseInterface,
-	insertionSortUseCase sortingalgorithm.InsertionSortUseCaseInterface,
-	mergeSortUseCase sortingalgorithm.MergeSortUseCaseInterface,
-	quickSortUseCase sortingalgorithm.QuickSortUseCaseInterface,
-	selectionSortUseCase sortingalgorithm.SelectionSortUseCaseInterface,
 ) *PostSortingAlgorithmUseCase {
 	return &PostSortingAlgorithmUseCase{
 		repository:           repository,
 		timeCalculateUseCase: timeCalculateUseCase,
-		sortingAlgorithms: map[SortingAlgorithm]AlgorithmFunc{
-			BubbleSort:    bubbleSortUseCase.Execute,
-			InsertionSort: insertionSortUseCase.Execute,
-			MergeSort:     mergeSortUseCase.Execute,
-			QuickSort:     quickSortUseCase.Execute,
-			SelectionSort: selectionSortUseCase.Execute,
+		sortingAlgorithms: map[SortingAlgorithm]sortingalgorithm.SortingAlgorithmsInterface{
+			BubbleSort:    sortingalgorithm.NewBubbleSortUseCase(),
+			InsertionSort: sortingalgorithm.NewInsertionSortUseCase(),
+			MergeSort:     sortingalgorithm.NewMergeSortUseCase(),
+			QuickSort:     sortingalgorithm.NewQuickSortUseCase(),
+			SelectionSort: sortingalgorithm.NewSelectionSortUseCase(),
 		},
 	}
 }
@@ -79,7 +72,7 @@ func (s *PostSortingAlgorithmUseCase) saveToDatabase(b *entity.Benchmark) error 
 func (s *PostSortingAlgorithmUseCase) calculateExecutionTimes(b *entity.Benchmark, arr []int) {
 	for algo, fn := range s.sortingAlgorithms {
 		result := s.timeCalculateUseCase.Execute(func() {
-			fn(arr)
+			_ = fn.Execute(arr)
 		}, string(algo))
 
 		b.Results = append(b.Results, result)

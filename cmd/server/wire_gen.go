@@ -8,7 +8,6 @@ package main
 
 import (
 	"github.com/didiegovieira/go-benchmark-api/internal/application/use_case"
-	"github.com/didiegovieira/go-benchmark-api/internal/application/use_case/sorting_algorithm"
 	"github.com/didiegovieira/go-benchmark-api/pkg/config"
 	"github.com/didiegovieira/go-benchmark-api/pkg/route"
 )
@@ -21,15 +20,10 @@ func InitializeDependencyContainer() (DependencyContainer, error) {
 	client := provideMongoDbClient(conf)
 	benchmarkRepositoryInterface := provideBenchmarkRepository(client, conf)
 	timeCalculateUseCaseInterface := provideTimeCalculateUseCase()
-	bubbleSortUseCaseInterface := provideBubbleSortUseCase()
-	insertionSortUseCaseInterface := provideInsertionSortUseCase()
-	mergeSortUseCaseInterface := provideMergeSortUseCase()
-	quickSortUseCaseInterface := provideQuickSortUseCase()
-	selectionSortUseCaseInterface := provideSelectionSortUseCase()
-	postSortingAlgorithmUseCaseInterface := providePostSortingAlgorithmUseCase(benchmarkRepositoryInterface, timeCalculateUseCaseInterface, bubbleSortUseCaseInterface, insertionSortUseCaseInterface, mergeSortUseCaseInterface, quickSortUseCaseInterface, selectionSortUseCaseInterface)
+	postSortingAlgorithmUseCaseInterface := providePostSortingAlgorithmUseCase(benchmarkRepositoryInterface, timeCalculateUseCaseInterface)
 	postSortingAlgorithmRoute := providePostSortingAlgorithm(postSortingAlgorithmUseCaseInterface)
 	v := provideRoutes(healthRoute, postSortingAlgorithmRoute)
-	dependencyContainer := newDependencyContainer(conf, v, postSortingAlgorithmUseCaseInterface, timeCalculateUseCaseInterface, bubbleSortUseCaseInterface, insertionSortUseCaseInterface, mergeSortUseCaseInterface, quickSortUseCaseInterface, selectionSortUseCaseInterface)
+	dependencyContainer := newDependencyContainer(conf, v, postSortingAlgorithmUseCaseInterface, timeCalculateUseCaseInterface)
 	return dependencyContainer, nil
 }
 
@@ -42,11 +36,6 @@ type DependencyContainer struct {
 
 	PostSortingAlgorithmUseCase usecase.PostSortingAlgorithmUseCaseInterface
 	TimeCalculateUseCase        usecase.TimeCalculateUseCaseInterface
-	BubbleSortUseCase           sortingalgorithm.BubbleSortUseCaseInterface
-	InsertionSortUseCase        sortingalgorithm.InsertionSortUseCaseInterface
-	MergeSortUseCase            sortingalgorithm.MergeSortUseCaseInterface
-	QuickSortUseCase            sortingalgorithm.QuickSortUseCaseInterface
-	SelectionSortUseCase        sortingalgorithm.SelectionSortUseCaseInterface
 }
 
 func newDependencyContainer(
@@ -56,11 +45,6 @@ func newDependencyContainer(
 
 	postSortingAlgorithmUseCase usecase.PostSortingAlgorithmUseCaseInterface,
 	timeCalculateUseCase usecase.TimeCalculateUseCaseInterface,
-	bubbleSortUseCase sortingalgorithm.BubbleSortUseCaseInterface,
-	insertionSortUseCase sortingalgorithm.InsertionSortUseCaseInterface,
-	mergeSortUseCase sortingalgorithm.MergeSortUseCaseInterface,
-	quickSortUseCase sortingalgorithm.QuickSortUseCaseInterface,
-	selectionSortUseCase sortingalgorithm.SelectionSortUseCaseInterface,
 
 ) DependencyContainer {
 

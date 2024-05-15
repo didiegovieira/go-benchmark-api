@@ -5,7 +5,6 @@ package main
 
 import (
 	usecase "github.com/didiegovieira/go-benchmark-api/internal/application/use_case"
-	sortingalgorithm "github.com/didiegovieira/go-benchmark-api/internal/application/use_case/sorting_algorithm"
 	"github.com/didiegovieira/go-benchmark-api/pkg/config"
 	"github.com/didiegovieira/go-benchmark-api/pkg/route"
 	"github.com/google/wire"
@@ -18,11 +17,6 @@ type DependencyContainer struct {
 
 	PostSortingAlgorithmUseCase usecase.PostSortingAlgorithmUseCaseInterface
 	TimeCalculateUseCase        usecase.TimeCalculateUseCaseInterface
-	BubbleSortUseCase           sortingalgorithm.BubbleSortUseCaseInterface
-	InsertionSortUseCase        sortingalgorithm.InsertionSortUseCaseInterface
-	MergeSortUseCase            sortingalgorithm.MergeSortUseCaseInterface
-	QuickSortUseCase            sortingalgorithm.QuickSortUseCaseInterface
-	SelectionSortUseCase        sortingalgorithm.SelectionSortUseCaseInterface
 }
 
 func newDependencyContainer(
@@ -32,11 +26,6 @@ func newDependencyContainer(
 
 	postSortingAlgorithmUseCase usecase.PostSortingAlgorithmUseCaseInterface,
 	timeCalculateUseCase usecase.TimeCalculateUseCaseInterface,
-	bubbleSortUseCase sortingalgorithm.BubbleSortUseCaseInterface,
-	insertionSortUseCase sortingalgorithm.InsertionSortUseCaseInterface,
-	mergeSortUseCase sortingalgorithm.MergeSortUseCaseInterface,
-	quickSortUseCase sortingalgorithm.QuickSortUseCaseInterface,
-	selectionSortUseCase sortingalgorithm.SelectionSortUseCaseInterface,
 
 ) DependencyContainer {
 
