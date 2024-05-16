@@ -70,7 +70,7 @@ http://localhost:3000
 
 ## ✌️ Acknowledgements
 
-Hi, I'm Brazilian, my name is Diego Marques Vieira and my English isn't the best haha. This project is just to implement clean code and clean architecture studios in Golang, thanks for reviewing and if you can leave a star 🌟!
+Hi, I'm Brazilian, my name is Diego Marques Vieira and my English isn't the best haha. This project is just to implement clean code and clean architecture study in Golang, thanks for reviewing and if you can leave a star 🌟!
 
 <img width="1000" src="https://i.pinimg.com/originals/fb/af/44/fbaf443c014bf40b95cfa35121572b25.gif" alt="study gif">
 
