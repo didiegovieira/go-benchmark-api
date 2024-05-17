@@ -13,17 +13,17 @@ type TimeCalculate = base.UseCase[dto.TimeCalculateInput, entity.Result]
 
 type TimeCalculateImplementation struct{}
 
-func NewTimeCalculateImplementation() *TimeCalculateImplementation {
+func NewTimeCalculate() *TimeCalculateImplementation {
 	return &TimeCalculateImplementation{}
 }
 
-func (s *TimeCalculateImplementation) Execute(ctx context.Context, input dto.TimeCalculateInput) entity.Result {
+func (s *TimeCalculateImplementation) Execute(ctx context.Context, input dto.TimeCalculateInput) (entity.Result, error) {
 	start := time.Now()
 	input.Func()
 
 	resultTime := s.creatingResultEntity(input.Name, time.Since(start))
 
-	return resultTime
+	return resultTime, nil
 }
 
 func (s *TimeCalculateImplementation) creatingResultEntity(name string, duration time.Duration) entity.Result {

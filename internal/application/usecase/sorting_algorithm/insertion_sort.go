@@ -6,7 +6,7 @@ type InsertionSort = base.UseCase[[]int, []int]
 
 type InsertionSortImplementation struct{}
 
-func NewInsertionSortImplementation() *InsertionSortImplementation {
+func NewInsertionSort() *InsertionSortImplementation {
 	return &InsertionSortImplementation{}
 }
 

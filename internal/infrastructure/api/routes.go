@@ -12,9 +12,9 @@ func (a *Application) SetupRoutes() {
 	{
 		base.GET("/health", a.HealthHandler.Handle())
 
-		sortingAlgorithms := router.Group("/benchmark", a.MiddlewareValidationRequest.Handle())
+		sortingAlgorithms := base.Group("/benchmark", a.MiddlewareValidationRequest.Handle(), a.MiddlewareCors.Handle())
 		{
-			sortingAlgorithms.POST("/sort")
+			sortingAlgorithms.POST("/sort", a.PostSortingAlgorithmHandler.Handle())
 		}
 	}
 }

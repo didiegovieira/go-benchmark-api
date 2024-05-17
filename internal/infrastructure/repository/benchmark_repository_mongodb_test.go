@@ -15,11 +15,11 @@ func TestSave(t *testing.T) {
 	mt := mtest.New(t, clientOpts)
 
 	mt.Run(t.Name(), func(mt *mtest.T) {
-		repository := NewBenchmarkRepositoryMongodb(mt.Client, "test")
+		repository := NewBenchmarkMongodb(mt.Client)
 
 		mt.AddMockResponses(bson.D{
-			{"ok", 1},
-			{"value", bson.D{}},
+			{Key: "ok", Value: 1},
+			{Key: "value", Value: bson.D{}},
 		})
 
 		err := repository.Save(&entity.Benchmark{})
@@ -32,7 +32,7 @@ func TestSaveWithError(t *testing.T) {
 	mt := mtest.New(t, clientOpts)
 
 	mt.Run(t.Name(), func(mt *mtest.T) {
-		repository := NewBenchmarkRepositoryMongodb(mt.Client, "test")
+		repository := NewBenchmarkMongodb(mt.Client)
 
 		mt.AddMockResponses(mtest.CreateCommandErrorResponse(mtest.CommandError{
 			Code:    11000,

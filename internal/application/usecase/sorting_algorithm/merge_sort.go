@@ -6,7 +6,7 @@ type MergeSort = base.UseCase[[]int, []int]
 
 type MergeSortImplementation struct{}
 
-func NewMergeSortImplementation() *MergeSortImplementation {
+func NewMergeSort() *MergeSortImplementation {
 	return &MergeSortImplementation{}
 }
 

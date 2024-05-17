@@ -7,7 +7,7 @@ import (
 
 func TestInsertionSortUseCaseExecute(t *testing.T) {
 	// Create an instance of InsertionSortUseCase
-	insertionSortUseCase := NewInsertionSortImplementation()
+	insertionSortUseCase := NewInsertionSort()
 
 	// Test case 1: Unsorted array
 	arr := []int{5, 3, 1, 4, 2}

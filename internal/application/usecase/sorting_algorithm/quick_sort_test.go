@@ -7,7 +7,7 @@ import (
 
 func TestQuickSortUseCaseExecute(t *testing.T) {
 	// Create an instance of QuickSortUseCase
-	quickSortUseCase := NewQuickSortImplementation()
+	quickSortUseCase := NewQuickSort()
 
 	// Test case 1: Unsorted array
 	arr := []int{5, 3, 1, 4, 2}

@@ -1,27 +1,23 @@
-package main
+package di
 
 import (
+	"github.com/didiegovieira/go-benchmark-api/internal/application/dto"
 	"github.com/didiegovieira/go-benchmark-api/internal/application/repository"
-	usecase "github.com/didiegovieira/go-benchmark-api/internal/application/use_case"
-	"github.com/google/wire"
+	"github.com/didiegovieira/go-benchmark-api/internal/application/usecase"
+	"github.com/didiegovieira/go-benchmark-api/internal/domain/entity"
+	"github.com/didiegovieira/go-benchmark-api/pkg/base"
 )
-
-var useCasesSet = wire.NewSet(
-	provideTimeCalculateUseCase,
-	providePostSortingAlgorithmUseCase,
-)
-
-func provideTimeCalculateUseCase() usecase.TimeCalculateUseCaseInterface {
-	return usecase.NewTimeCalculateUseCase()
-}
 
 func providePostSortingAlgorithmUseCase(
-	repository repository.BenchmarkRepositoryInterface,
-	timeCalculateUseCase usecase.TimeCalculateUseCaseInterface,
-
-) usecase.PostSortingAlgorithmUseCaseInterface {
-	return usecase.NewPostSortingAlgorithmUseCase(
+	repository repository.BenchmarkRepository,
+	timeCalculate usecase.TimeCalculate,
+) base.UseCase[dto.SortingInput, *entity.Benchmark] {
+	return usecase.NewPostSortingAlgorithm(
 		repository,
-		timeCalculateUseCase,
+		timeCalculate,
 	)
+}
+
+func provideTimeCalculateUseCase() base.UseCase[dto.TimeCalculateInput, entity.Result] {
+	return usecase.NewTimeCalculate()
 }

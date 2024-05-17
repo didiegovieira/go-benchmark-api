@@ -6,7 +6,7 @@ type BubbleSort = base.UseCase[[]int, []int]
 
 type BubbleSortImplementation struct{}
 
-func NewBubbleSortImplementation() *BubbleSortImplementation {
+func NewBubbleSort() *BubbleSortImplementation {
 	return &BubbleSortImplementation{}
 }
 

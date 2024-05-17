@@ -6,7 +6,7 @@ type QuickSort = base.UseCase[[]int, []int]
 
 type QuickSortImplementation struct{}
 
-func NewQuickSortImplementation() *QuickSortImplementation {
+func NewQuickSort() *QuickSortImplementation {
 	return &QuickSortImplementation{}
 }
 

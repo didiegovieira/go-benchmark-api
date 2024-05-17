@@ -7,7 +7,7 @@ import (
 
 func TestSelectionSortUseCaseExecute(t *testing.T) {
 	// Create an instance of SelectionSortUseCase
-	selectionSortUseCase := NewSelectionSortImplementation()
+	selectionSortUseCase := NewSelectionSort()
 
 	// Test case 1: Unsorted array
 	arr := []int{5, 3, 1, 4, 2}

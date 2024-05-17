@@ -21,34 +21,25 @@ const (
 	SelectionSort SortingAlgorithm = "SelectionSort"
 )
 
-type PostSortingAlgorithmUseCase = base.UseCase[dto.RequestInput, *entity.Benchmark]
+type PostSortingAlgorithm = base.UseCase[dto.SortingInput, *entity.Benchmark]
 
 type PostSortingAlgorithmImplementation struct {
 	repository           repository.BenchmarkRepository
 	timeCalculateUseCase TimeCalculate
-	sortingAlgorithms    map[SortingAlgorithm]sortingalgorithm.SortingAlgorithmsInterface
 }
 
 func NewPostSortingAlgorithm(
 	repository repository.BenchmarkRepository,
 	timeCalculateUseCase TimeCalculate,
-	sortingAlgorithms map[SortingAlgorithm]sortingalgorithm.SortingAlgorithmsInterface,
 ) *PostSortingAlgorithmImplementation {
 	return &PostSortingAlgorithmImplementation{
 		repository:           repository,
 		timeCalculateUseCase: timeCalculateUseCase,
-		sortingAlgorithms: map[SortingAlgorithm]sortingalgorithm.SortingAlgorithmsInterface{
-			BubbleSort:    sortingalgorithm.NewBubbleSortImplementation(),
-			InsertionSort: sortingalgorithm.NewInsertionSortImplementation(),
-			MergeSort:     sortingalgorithm.NewMergeSortImplementation(),
-			QuickSort:     sortingalgorithm.NewQuickSortImplementation(),
-			SelectionSort: sortingalgorithm.NewSelectionSortImplementation(),
-		},
 	}
 }
 
-func (s *PostSortingAlgorithmImplementation) Execute(ctx context.Context, input dto.RequestInput) (*entity.Benchmark, error) {
-	b := s.initBenchmark(entity.SortingAlgorithm, input.Arr)
+func (s *PostSortingAlgorithmImplementation) Execute(ctx context.Context, input dto.SortingInput) (*entity.Benchmark, error) {
+	b := s.initBenchmarkEntity(entity.SortingAlgorithm, input.Arr)
 	s.calculateExecutionTimes(ctx, b, input.Arr)
 	s.findFastestAndSlowest(b)
 	err := s.saveToDatabase(b)
@@ -56,7 +47,7 @@ func (s *PostSortingAlgorithmImplementation) Execute(ctx context.Context, input 
 	return b, err
 }
 
-func (s *PostSortingAlgorithmImplementation) initBenchmark(bn entity.BenchmarkName, arr []int) *entity.Benchmark {
+func (s *PostSortingAlgorithmImplementation) initBenchmarkEntity(bn entity.BenchmarkType, arr []int) *entity.Benchmark {
 	b := &entity.Benchmark{}
 	b.NewBenchmark(bn, arr)
 
@@ -73,7 +64,7 @@ func (s *PostSortingAlgorithmImplementation) saveToDatabase(b *entity.Benchmark)
 }
 
 func (s *PostSortingAlgorithmImplementation) calculateExecutionTimes(ctx context.Context, b *entity.Benchmark, arr []int) {
-	for algo, fn := range s.sortingAlgorithms {
+	for algo, fn := range s.mapAlgorithmFunctions() {
 		input := dto.TimeCalculateInput{
 			Name: string(algo),
 			Func: func() {
@@ -84,6 +75,16 @@ func (s *PostSortingAlgorithmImplementation) calculateExecutionTimes(ctx context
 		result, _ := s.timeCalculateUseCase.Execute(ctx, input)
 
 		b.AddResult(result)
+	}
+}
+
+func (s *PostSortingAlgorithmImplementation) mapAlgorithmFunctions() map[SortingAlgorithm]sortingalgorithm.SortingAlgorithmsInterface {
+	return map[SortingAlgorithm]sortingalgorithm.SortingAlgorithmsInterface{
+		BubbleSort:    sortingalgorithm.NewBubbleSort(),
+		InsertionSort: sortingalgorithm.NewInsertionSort(),
+		MergeSort:     sortingalgorithm.NewMergeSort(),
+		QuickSort:     sortingalgorithm.NewQuickSort(),
+		SelectionSort: sortingalgorithm.NewSelectionSort(),
 	}
 }
 

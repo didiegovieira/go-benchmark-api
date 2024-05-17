@@ -7,7 +7,7 @@ import (
 
 func TestMergeSortUseCaseExecute(t *testing.T) {
 	// Create an instance of MergeSortUseCase
-	mergeSortUseCase := NewMergeSortImplementation()
+	mergeSortUseCase := NewMergeSort()
 
 	// Test case 1: Unsorted array
 	arr := []int{5, 3, 1, 4, 2}

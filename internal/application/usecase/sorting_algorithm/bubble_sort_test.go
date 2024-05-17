@@ -7,7 +7,7 @@ import (
 
 func TestBubbleSortUseCaseExecute(t *testing.T) {
 	// Create an instance of BubbleSortUseCase
-	bubbleSortUseCase := NewBubbleSortImplementation()
+	bubbleSortUseCase := NewBubbleSort()
 
 	// Test case 1: Unsorted array
 	arr := []int{5, 3, 1, 4, 2}

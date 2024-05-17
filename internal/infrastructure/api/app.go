@@ -14,22 +14,24 @@ import (
 	"github.com/didiegovieira/go-benchmark-api/internal/settings"
 	"github.com/didiegovieira/go-benchmark-api/pkg/api"
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 )
 
 type Application struct {
 	Server api.Server[*gin.Engine]
 
-	HealthHandler *handler.Health
+	HealthHandler               *handler.Health
+	PostSortingAlgorithmHandler *handler.PostSortingAlgorithm
 
 	MiddlewareValidationRequest *middleware.RequestValidation
+	MiddlewareCors              *middleware.Cors
 }
 
 func init() {
-	err := godotenv.Load()
-	if err != nil {
-		panic("Error loading .env file")
-	}
+	// err := godotenv.Load()
+	// if err != nil {
+	// 	panic("Error loading .env file")
+	// }
+
 	settings.Init()
 }
 

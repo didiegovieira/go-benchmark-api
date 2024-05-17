@@ -1,14 +1,13 @@
 package main
 
-import "github.com/didiegovieira/go-benchmark-api/internal/infrastructure/api"
+import "github.com/didiegovieira/go-benchmark-api/di"
 
 func main() {
-	di, err := InitializeDependencyContainer()
+	api, cleanup, err := di.InitializeApi()
 	if err != nil {
-		panic(err)
+		panic("couldn't init api: " + err.Error())
 	}
 
-	http := api.NewServer("3000")
-	http.RegisterRoutes(di.Routes)
-	http.Start()
+	api.Start()
+	defer cleanup()
 }

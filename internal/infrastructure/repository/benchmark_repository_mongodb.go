@@ -5,57 +5,75 @@ import (
 	"time"
 
 	"github.com/didiegovieira/go-benchmark-api/internal/domain/entity"
+	"github.com/didiegovieira/go-benchmark-api/internal/settings"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type BenchmarkModelMongodb struct {
 	Id            string               `json:"id" bson:"_id"`
-	BenchmarkName entity.BenchmarkName `json:"benchmark_name" bson:"benchmark_name"`
+	BenchmarkType entity.BenchmarkType `json:"benchmark_type" bson:"benchmark_type"`
 	Data          []int                `json:"data" bson:"data"`
 	Results       []entity.Result      `json:"results" bson:"results"`
-	Fast          entity.Result        `json:"fast" bson:"fast"`
-	Slow          entity.Result        `json:"slow" bson:"slow"`
-	Date          time.Time            `json:"date" bson:"date`
+	Faster        entity.Result        `json:"faster" bson:"faster"`
+	Slower        entity.Result        `json:"slower" bson:"slower"`
+	CreatedAt     time.Time            `json:"created_at" bson:"created_at"`
 }
 
-type BenchmarkRepositoryMongodb struct {
+type BenchmarkMongodb struct {
 	Client     *mongo.Client
 	collection *mongo.Collection
 }
 
-func NewBenchmarkRepositoryMongodb(client *mongo.Client, database string) *BenchmarkRepositoryMongodb {
-	return &BenchmarkRepositoryMongodb{
+func NewBenchmarkMongodb(client *mongo.Client) *BenchmarkMongodb {
+	benchmarkMongoDB := &BenchmarkMongodb{
 		Client:     client,
-		collection: client.Database(database).Collection("benchmark"),
+		collection: client.Database(settings.Settings.Database.DbName).Collection("benchmark"),
 	}
+
+	_ = benchmarkMongoDB.createIndexes()
+
+	return benchmarkMongoDB
 }
 
-func (b *BenchmarkRepositoryMongodb) entityToModel(benchmarkEntity *entity.Benchmark) (benchmark BenchmarkModelMongodb) {
+func (b BenchmarkMongodb) createIndexes() error {
+	_, err := b.collection.Indexes().CreateMany(context.Background(), []mongo.IndexModel{
+		{Keys: bson.D{{Key: "created_at", Value: 1}}},
+	}, &options.CreateIndexesOptions{})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (b *BenchmarkMongodb) entityToModel(benchmarkEntity *entity.Benchmark) (benchmark BenchmarkModelMongodb) {
 	return BenchmarkModelMongodb{
 		Id:            benchmarkEntity.Id,
-		BenchmarkName: benchmarkEntity.BenchmarkName,
+		BenchmarkType: benchmarkEntity.BenchmarkType,
 		Data:          benchmarkEntity.Data,
 		Results:       benchmarkEntity.Results,
-		Fast:          benchmarkEntity.Fast,
-		Slow:          benchmarkEntity.Slow,
-		Date:          benchmarkEntity.Date,
+		Faster:        benchmarkEntity.Faster,
+		Slower:        benchmarkEntity.Slower,
+		CreatedAt:     benchmarkEntity.CreatedAt,
 	}
 }
 
-func (b *BenchmarkRepositoryMongodb) modelToEntity(benchmarkModel *BenchmarkModelMongodb) (benchmark *entity.Benchmark) {
+func (b *BenchmarkMongodb) modelToEntity(benchmarkModel *BenchmarkModelMongodb) (benchmark *entity.Benchmark) {
 	return &entity.Benchmark{
 		Id:            benchmarkModel.Id,
-		BenchmarkName: benchmarkModel.BenchmarkName,
+		BenchmarkType: benchmarkModel.BenchmarkType,
 		Data:          benchmarkModel.Data,
 		Results:       benchmarkModel.Results,
-		Fast:          benchmarkModel.Fast,
-		Slow:          benchmarkModel.Slow,
-		Date:          benchmarkModel.Date,
+		Faster:        benchmarkModel.Faster,
+		Slower:        benchmarkModel.Slower,
+		CreatedAt:     benchmarkModel.CreatedAt,
 	}
 }
 
-func (o *BenchmarkRepositoryMongodb) Get(id string) (*entity.Benchmark, error) {
+func (o *BenchmarkMongodb) Get(id string) (*entity.Benchmark, error) {
 	var result BenchmarkModelMongodb
 
 	if err := o.collection.FindOne(context.Background(), bson.M{"_id": id}).Decode(&result); err != nil {
@@ -69,10 +87,10 @@ func (o *BenchmarkRepositoryMongodb) Get(id string) (*entity.Benchmark, error) {
 	return o.modelToEntity(&result), nil
 }
 
-func (o *BenchmarkRepositoryMongodb) GetAll(benchmarkName string) ([]*entity.Benchmark, error) {
+func (o *BenchmarkMongodb) GetAll(benchmarkName string) ([]*entity.Benchmark, error) {
 	var results []*BenchmarkModelMongodb
 
-	filter := bson.M{"benchmark_name": benchmarkName}
+	filter := bson.M{"benchmark_type": benchmarkName}
 
 	cursor, err := o.collection.Find(context.Background(), filter)
 	if err != nil {
@@ -100,7 +118,7 @@ func (o *BenchmarkRepositoryMongodb) GetAll(benchmarkName string) ([]*entity.Ben
 	return benchmarks, nil
 }
 
-func (b *BenchmarkRepositoryMongodb) Save(benchmark *entity.Benchmark) error {
+func (b *BenchmarkMongodb) Save(benchmark *entity.Benchmark) error {
 	_, err := b.collection.InsertOne(context.Background(), b.entityToModel(benchmark))
 	if err != nil {
 		return err

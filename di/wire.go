@@ -1,52 +1,55 @@
 //go:build wireinject
 // +build wireinject
 
-package main
+package di
 
 import (
-	usecase "github.com/didiegovieira/go-benchmark-api/internal/application/use_case"
-	"github.com/didiegovieira/go-benchmark-api/pkg/config"
-	"github.com/didiegovieira/go-benchmark-api/pkg/route"
+	"github.com/didiegovieira/go-benchmark-api/internal/infrastructure/api"
+
+	"github.com/didiegovieira/go-benchmark-api/internal/test"
 	"github.com/google/wire"
+	"go.uber.org/mock/gomock"
 )
 
-type DependencyContainer struct {
-	Configs *config.Conf
+var wireApiSet = wire.NewSet(
+	commonSet,
+	provideMongoDbClient,
+	provideApiServer,
 
-	Routes []route.RouteInterface
+	provideBenchmarckRepositoryMongodb,
 
-	PostSortingAlgorithmUseCase usecase.PostSortingAlgorithmUseCaseInterface
-	TimeCalculateUseCase        usecase.TimeCalculateUseCaseInterface
+	provideTimeCalculateUseCase,
+	providePostSortingAlgorithmUseCase,
+
+	apiMiddlewaresSet,
+	apiHandlersSet,
+	wire.Struct(new(api.Application), "*"),
+)
+
+var wireTestSet = wire.NewSet(
+	commonSet,
+	provideMongoDbClient,
+	provideApiServer,
+
+	provideBenchmarckRepositoryMongodb,
+
+	provideTimeCalculateUseCase,
+	providePostSortingAlgorithmUseCase,
+
+	apiMiddlewaresSet,
+	apiHandlersSet,
+
+	wire.Struct(new(api.Application), "*"),
+	wire.Struct(new(test.Application), "*"),
+)
+
+func InitializeApi() (*api.Application, func(), error) {
+	wire.Build(wireApiSet)
+	return &api.Application{}, func() {}, nil
 }
 
-func newDependencyContainer(
-	configs *config.Conf,
+func InitializeTests(mockCtrl *gomock.Controller) (*test.Application, func(), error) {
+	wire.Build(wireTestSet)
 
-	routes []route.RouteInterface,
-
-	postSortingAlgorithmUseCase usecase.PostSortingAlgorithmUseCaseInterface,
-	timeCalculateUseCase usecase.TimeCalculateUseCaseInterface,
-
-) DependencyContainer {
-
-	dc := DependencyContainer{
-		Configs: configs,
-
-		Routes: routes,
-	}
-
-	return dc
-}
-
-func InitializeDependencyContainer() (DependencyContainer, error) {
-	wire.Build(
-		config.LoadConfig,
-		clientsSet,
-		repositoriesSet,
-		useCasesSet,
-		routesSet,
-		newDependencyContainer,
-	)
-
-	return DependencyContainer{}, nil
+	return &test.Application{}, func() {}, nil
 }

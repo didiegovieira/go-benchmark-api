@@ -6,7 +6,7 @@ type SelectionSort = base.UseCase[[]int, []int]
 
 type SelectionSortImplementation struct{}
 
-func NewSelectionSortImplementation() *SelectionSortImplementation {
+func NewSelectionSort() *SelectionSortImplementation {
 	return &SelectionSortImplementation{}
 }
 
