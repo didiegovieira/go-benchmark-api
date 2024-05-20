@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/didiegovieira/go-benchmark-api/tests"
+	"github.com/didiegovieira/go-benchmark-api/test"
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
@@ -34,7 +34,7 @@ func TestGinServerRegisterRoutes(t *testing.T) {
 }
 
 func TestGinServerStartError(t *testing.T) {
-	tests.Setup(t, nil)
+	test.Setup(t, nil)
 
 	httpServer := &http.Server{
 		Addr: ":error",

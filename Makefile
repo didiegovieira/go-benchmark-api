@@ -8,3 +8,6 @@ wire:
 
 gen-mocks:
 	./gen-mocks.sh
+
+init:
+	docker-compose up --build

@@ -6,7 +6,7 @@ import (
 
 	"github.com/didiegovieira/go-benchmark-api/internal/application/dto"
 	"github.com/didiegovieira/go-benchmark-api/internal/application/repository"
-	sortingalgorithm "github.com/didiegovieira/go-benchmark-api/internal/application/usecase/sorting_algorithm"
+	"github.com/didiegovieira/go-benchmark-api/internal/application/usecase/sortingalgorithm"
 	"github.com/didiegovieira/go-benchmark-api/internal/domain/entity"
 	"github.com/didiegovieira/go-benchmark-api/pkg/base"
 )

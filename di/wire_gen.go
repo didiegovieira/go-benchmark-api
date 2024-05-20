@@ -38,11 +38,15 @@ func InitializeApi() (*api.Application, func(), error) {
 	requestValidation := &middleware.RequestValidation{
 		Presenter: presenter,
 	}
+	cors := &middleware.Cors{
+		Presenter: presenter,
+	}
 	application := &api.Application{
 		Server:                      server,
 		HealthHandler:               health,
 		PostSortingAlgorithmHandler: postSortingAlgorithm,
 		MiddlewareValidationRequest: requestValidation,
+		MiddlewareCors:              cors,
 	}
 	return application, func() {
 		cleanup()
@@ -69,11 +73,15 @@ func InitializeTests(mockCtrl *gomock.Controller) (*test.Application, func(), er
 	requestValidation := &middleware.RequestValidation{
 		Presenter: presenter,
 	}
+	cors := &middleware.Cors{
+		Presenter: presenter,
+	}
 	application := &api.Application{
 		Server:                      server,
 		HealthHandler:               health,
 		PostSortingAlgorithmHandler: postSortingAlgorithm,
 		MiddlewareValidationRequest: requestValidation,
+		MiddlewareCors:              cors,
 	}
 	testApplication := &test.Application{
 		Api:                 application,

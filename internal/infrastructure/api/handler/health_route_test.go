@@ -1,11 +1,20 @@
 package handler
 
-// func TestHealth(t *testing.T) {
-// 	ctrl := gomock.NewController(t)
-// 	mockPresenter := mocks.NewMockApiPresenter(ctrl)
+import (
+	"net/http"
+	"testing"
 
-// 	mockPresenter.EXPECT().Present(gomock.Any(), gin.H{"ok": true}, http.StatusOK).Times(1)
+	"github.com/didiegovieira/go-benchmark-api/test/mocks"
+	"github.com/gin-gonic/gin"
+	"go.uber.org/mock/gomock"
+)
 
-// 	route := handler.Health{mockPresenter}
-// 	route.Handle()(&gin.Context{})
-// }
+func TestHealth(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	mockPresenter := mocks.NewMockApiPresenter(ctrl)
+
+	mockPresenter.EXPECT().Present(gomock.Any(), gin.H{"ok": true}, http.StatusOK).Times(1)
+
+	route := Health{mockPresenter}
+	route.Handle()(&gin.Context{})
+}
