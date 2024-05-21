@@ -12,7 +12,6 @@ import (
 )
 
 var wireApiSet = wire.NewSet(
-	commonSet,
 	provideMongoDbClient,
 	provideApiServer,
 
@@ -27,7 +26,6 @@ var wireApiSet = wire.NewSet(
 )
 
 var wireTestSet = wire.NewSet(
-	commonSet,
 	provideMongoDbClient,
 	provideApiServer,
 

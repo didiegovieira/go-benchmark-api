@@ -4,12 +4,9 @@ import (
 	"context"
 
 	"github.com/didiegovieira/go-benchmark-api/internal/settings"
-	"github.com/google/wire"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
-
-var commonSet = wire.NewSet()
 
 func provideMongoDbClient() (*mongo.Client, func(), error) {
 	mongodbClient, err := mongo.Connect(

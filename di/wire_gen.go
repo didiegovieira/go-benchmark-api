@@ -97,7 +97,6 @@ func InitializeTests(mockCtrl *gomock.Controller) (*test.Application, func(), er
 // wire.go:
 
 var wireApiSet = wire.NewSet(
-	commonSet,
 	provideMongoDbClient,
 	provideApiServer,
 
@@ -111,7 +110,6 @@ var wireApiSet = wire.NewSet(
 )
 
 var wireTestSet = wire.NewSet(
-	commonSet,
 	provideMongoDbClient,
 	provideApiServer,
 
