@@ -22,8 +22,7 @@ type Application struct {
 	HealthHandler               *handler.Health
 	PostSortingAlgorithmHandler *handler.PostSortingAlgorithm
 
-	MiddlewareValidationRequest *middleware.RequestValidation
-	MiddlewareCors              *middleware.Cors
+	MiddlewareCors *middleware.Cors
 }
 
 func init() {

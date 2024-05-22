@@ -1,4 +1,4 @@
-package error
+package errors
 
 type Validation struct {
 	Errors []ValidationMessage `json:"errors"`

@@ -24,7 +24,7 @@ func TestTimeCalculateImplementationExecute(t *testing.T) {
 
 		assert.NoError(t, err)
 		assert.Equal(t, "TestFunc", result.Name)
-		assert.True(t, result.Duration >= 100*time.Millisecond)
+		assert.True(t, result.Duration >= 100*time.Millisecond.Milliseconds())
 	})
 
 	t.Run("should return result entity with correct name and duration", func(t *testing.T) {
@@ -39,6 +39,6 @@ func TestTimeCalculateImplementationExecute(t *testing.T) {
 
 		assert.NoError(t, err)
 		assert.Equal(t, "TestFunc", result.Name)
-		assert.True(t, result.Duration >= 50*time.Millisecond)
+		assert.True(t, result.Duration >= 50*time.Millisecond.Milliseconds())
 	})
 }

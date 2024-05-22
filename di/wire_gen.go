@@ -35,9 +35,6 @@ func InitializeApi() (*api.Application, func(), error) {
 		PostSortingAlgorithmUseCase: baseUseCase,
 		Presenter:                   presenter,
 	}
-	requestValidation := &middleware.RequestValidation{
-		Presenter: presenter,
-	}
 	cors := &middleware.Cors{
 		Presenter: presenter,
 	}
@@ -45,7 +42,6 @@ func InitializeApi() (*api.Application, func(), error) {
 		Server:                      server,
 		HealthHandler:               health,
 		PostSortingAlgorithmHandler: postSortingAlgorithm,
-		MiddlewareValidationRequest: requestValidation,
 		MiddlewareCors:              cors,
 	}
 	return application, func() {
@@ -70,9 +66,6 @@ func InitializeTests(mockCtrl *gomock.Controller) (*test.Application, func(), er
 		PostSortingAlgorithmUseCase: baseUseCase,
 		Presenter:                   presenter,
 	}
-	requestValidation := &middleware.RequestValidation{
-		Presenter: presenter,
-	}
 	cors := &middleware.Cors{
 		Presenter: presenter,
 	}
@@ -80,7 +73,6 @@ func InitializeTests(mockCtrl *gomock.Controller) (*test.Application, func(), er
 		Server:                      server,
 		HealthHandler:               health,
 		PostSortingAlgorithmHandler: postSortingAlgorithm,
-		MiddlewareValidationRequest: requestValidation,
 		MiddlewareCors:              cors,
 	}
 	testApplication := &test.Application{

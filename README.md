@@ -42,6 +42,7 @@ The project is still under development and the next updates will focus on the fo
 ## 🛠️ Project Structure
 The project follows a modular structure inspired by Clean Architecture:
 - **cmd/server/main.go**: Entry point for the application.
+- **docs/**: Documentation files and assets.
 - **di/**: Dependency injection configurations for various components.
 - **internal/**: Core application logic.
   - **application/**: Use cases and DTOs.
@@ -63,7 +64,7 @@ docker-compose up --build
 ## 🌟 Usage
 Once the application is running, you can interact with the API using tools like Postman or cURL. Here are some sample endpoints:
 ```
-http://localhost:3000
+http://localhost:3000/api
 ```
 - `/health`: Check the health of the API.
 - `/benchmark/sort`: Benchmark different sorting algorithms.

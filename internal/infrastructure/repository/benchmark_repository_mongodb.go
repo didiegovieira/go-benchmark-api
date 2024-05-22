@@ -78,7 +78,7 @@ func (o *BenchmarkMongodb) Get(id string) (*entity.Benchmark, error) {
 
 	if err := o.collection.FindOne(context.Background(), bson.M{"_id": id}).Decode(&result); err != nil {
 		if err == mongo.ErrNoDocuments {
-			return nil, nil
+			return nil, err
 		}
 
 		return nil, err
@@ -88,25 +88,15 @@ func (o *BenchmarkMongodb) Get(id string) (*entity.Benchmark, error) {
 }
 
 func (o *BenchmarkMongodb) GetAll(benchmarkName string) ([]*entity.Benchmark, error) {
-	var results []*BenchmarkModelMongodb
-
 	filter := bson.M{"benchmark_type": benchmarkName}
-
 	cursor, err := o.collection.Find(context.Background(), filter)
 	if err != nil {
 		return nil, err
 	}
 	defer cursor.Close(context.Background())
 
-	for cursor.Next(context.Background()) {
-		var result BenchmarkModelMongodb
-		if err := cursor.Decode(&result); err != nil {
-			return nil, err
-		}
-		results = append(results, &result)
-	}
-
-	if err := cursor.Err(); err != nil {
+	var results []*BenchmarkModelMongodb
+	if err := cursor.All(context.Background(), &results); err != nil {
 		return nil, err
 	}
 

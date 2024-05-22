@@ -6,6 +6,5 @@ import (
 )
 
 var apiMiddlewaresSet = wire.NewSet(
-	wire.Struct(new(middleware.RequestValidation), "*"),
 	wire.Struct(new(middleware.Cors), "*"),
 )

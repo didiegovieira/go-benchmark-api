@@ -10,7 +10,7 @@ import (
 
 	"github.com/didiegovieira/go-benchmark-api/internal/application/dto"
 	"github.com/didiegovieira/go-benchmark-api/internal/domain/entity"
-	cer "github.com/didiegovieira/go-benchmark-api/pkg/error"
+	cer "github.com/didiegovieira/go-benchmark-api/pkg/errors"
 	"github.com/didiegovieira/go-benchmark-api/test/mocks"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/assert/v2"

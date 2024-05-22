@@ -1,6 +1,6 @@
 CMD_DIR = ./cmd
 
-test:
+tests:
 	go test -coverprofile coverprofile.out -v ./... && go tool cover -html=coverprofile.out -o=coverprofile.html
 
 wire:

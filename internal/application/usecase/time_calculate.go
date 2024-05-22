@@ -29,6 +29,6 @@ func (s *TimeCalculateImplementation) Execute(ctx context.Context, input dto.Tim
 func (s *TimeCalculateImplementation) creatingResultEntity(name string, duration time.Duration) entity.Result {
 	return entity.Result{
 		Name:     name,
-		Duration: duration,
+		Duration: duration.Milliseconds(),
 	}
 }

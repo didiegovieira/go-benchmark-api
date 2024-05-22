@@ -3,7 +3,7 @@ package presenter
 import (
 	"net/http"
 
-	appErr "github.com/didiegovieira/go-benchmark-api/pkg/error"
+	appErr "github.com/didiegovieira/go-benchmark-api/pkg/errors"
 	"github.com/gin-gonic/gin"
 )
 

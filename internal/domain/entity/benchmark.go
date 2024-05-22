@@ -24,8 +24,8 @@ type Benchmark struct {
 }
 
 type Result struct {
-	Name     string        `json:"name"`
-	Duration time.Duration `json:"duration"`
+	Name     string `json:"name"`
+	Duration int64  `json:"duration"`
 }
 
 func (b *Benchmark) NewBenchmark(bn BenchmarkType, data []int) {

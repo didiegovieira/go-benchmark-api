@@ -1,20 +1,31 @@
 package api
 
+import (
+	"github.com/didiegovieira/go-benchmark-api/docs"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+)
+
 const (
-	baseRoutePrefix = "/api"
+	prefix = "/api"
 )
 
 func (a *Application) SetupRoutes() {
 
-	router := a.Server.GetRouter()
+	r := a.Server.GetRouter()
 
-	base := router.Group(baseRoutePrefix)
+	docs.SwaggerInfo.Title = "Go Benchmark API"
+	docs.SwaggerInfo.BasePath = "/api"
+
+	c := r.Group(prefix)
 	{
-		base.GET("/health", a.HealthHandler.Handle())
+		c.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-		sortingAlgorithms := base.Group("/benchmark", a.MiddlewareCors.Handle())
+		c.GET("/health", a.HealthHandler.Handle())
+
+		sa := c.Group("/benchmark", a.MiddlewareCors.Handle())
 		{
-			sortingAlgorithms.POST("/sort", a.PostSortingAlgorithmHandler.Handle())
+			sa.POST("/sort", a.PostSortingAlgorithmHandler.Handle())
 		}
 	}
 }
