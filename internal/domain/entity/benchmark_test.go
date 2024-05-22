@@ -16,10 +16,10 @@ func TestBenchmarkNewBenchmark(t *testing.T) {
 
 	assert.NotNil(t, benchmark)
 	assert.NotEmpty(t, benchmark.Id)
-	assert.Equal(t, benchmarkType, benchmark.BenchmarkName)
+	assert.Equal(t, benchmarkType, benchmark.BenchmarkType)
 	assert.Equal(t, data, benchmark.Data)
 	assert.Empty(t, benchmark.Results)
-	assert.True(t, benchmark.Date.Before(time.Now()))
+	assert.True(t, benchmark.CreatedAt.Before(time.Now()))
 }
 
 func TestBenchmarkNewBenchmarkSerialization(t *testing.T) {
@@ -31,10 +31,10 @@ func TestBenchmarkNewBenchmarkSerialization(t *testing.T) {
 
 	assert.NotNil(t, benchmark)
 	assert.NotEmpty(t, benchmark.Id)
-	assert.Equal(t, benchmarkType, benchmark.BenchmarkName)
+	assert.Equal(t, benchmarkType, benchmark.BenchmarkType)
 	assert.Equal(t, data, benchmark.Data)
 	assert.Empty(t, benchmark.Results)
-	assert.True(t, benchmark.Date.Before(time.Now()))
+	assert.True(t, benchmark.CreatedAt.Before(time.Now()))
 }
 
 func TestBenchmarkNewBenchmarkUniqueId(t *testing.T) {
@@ -57,5 +57,44 @@ func TestBenchmarkNewBenchmarkDate(t *testing.T) {
 	benchmark := Benchmark{}
 	benchmark.NewBenchmark(benchmarkType, data)
 
-	assert.True(t, benchmark.Date.Before(time.Now()))
+	assert.True(t, benchmark.CreatedAt.Before(time.Now()))
+}
+
+func TestAddResult(t *testing.T) {
+	benchmark := &Benchmark{}
+
+	result := Result{Name: "Test Result", Duration: time.Hour.Milliseconds()}
+
+	benchmark.AddResult(result)
+
+	if len(benchmark.Results) != 1 {
+		t.Errorf("Expected 1 result, got %d", len(benchmark.Results))
+	}
+	if benchmark.Results[0] != result {
+		t.Errorf("Expected result %+v, got %+v", result, benchmark.Results[0])
+	}
+}
+
+func TestSetFast(t *testing.T) {
+	benchmark := &Benchmark{}
+
+	result := Result{Name: "Fast Result", Duration: time.Hour.Milliseconds()}
+
+	benchmark.SetFast(result)
+
+	if benchmark.Faster != result {
+		t.Errorf("Expected fastest result %+v, got %+v", result, benchmark.Faster)
+	}
+}
+
+func TestSetSlow(t *testing.T) {
+	benchmark := &Benchmark{}
+
+	result := Result{Name: "Slow Result", Duration: time.Hour.Milliseconds()}
+
+	benchmark.SetSlow(result)
+
+	if benchmark.Slower != result {
+		t.Errorf("Expected slowest result %+v, got %+v", result, benchmark.Slower)
+	}
 }

@@ -6,32 +6,44 @@ import (
 	"github.com/google/uuid"
 )
 
-type BenchmarkName string
+type BenchmarkType string
 
 const (
-	SortingAlgorithm BenchmarkName = "sorting_algorithm"
-	Serialization    BenchmarkName = "serialization"
+	SortingAlgorithm BenchmarkType = "sorting_algorithm"
+	Serialization    BenchmarkType = "serialization"
 )
 
 type Benchmark struct {
 	Id            string        `json:"id"`
-	BenchmarkName BenchmarkName `json:"benchmark_name"`
+	BenchmarkType BenchmarkType `json:"benchmark_type"`
 	Data          []int         `json:"data"`
 	Results       []Result      `json:"results"`
-	Fast          Result        `json:"fast"`
-	Slow          Result        `json:"slow"`
-	Date          time.Time     `json:"date"`
+	Faster        Result        `json:"faster"`
+	Slower        Result        `json:"slower"`
+	CreatedAt     time.Time     `json:"created_at"`
 }
 
 type Result struct {
-	Name     string        `json:"name"`
-	Duration time.Duration `json:"duration"`
+	Name     string `json:"name"`
+	Duration int64  `json:"duration"`
 }
 
-func (b *Benchmark) NewBenchmark(bn BenchmarkName, data []int) {
+func (b *Benchmark) NewBenchmark(bn BenchmarkType, data []int) {
 	b.Id = uuid.New().String()
-	b.BenchmarkName = bn
+	b.BenchmarkType = bn
 	b.Data = data
 	b.Results = []Result{}
-	b.Date = time.Now()
+	b.CreatedAt = time.Now()
+}
+
+func (b *Benchmark) AddResult(result Result) {
+	b.Results = append(b.Results, result)
+}
+
+func (b *Benchmark) SetFast(result Result) {
+	b.Faster = result
+}
+
+func (b *Benchmark) SetSlow(result Result) {
+	b.Slower = result
 }

@@ -18,6 +18,7 @@ services:
     environment:
       - MONGODB_URI=mongodb://mongodb:27017/
       - MONGODB_DATABASE=benchmark
+      - ENVIRONMENT=local
     depends_on:
       - mongodb
 

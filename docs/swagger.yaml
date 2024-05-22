@@ -1,0 +1,108 @@
+definitions:
+  dto.SortingInput:
+    properties:
+      arr:
+        items:
+          type: integer
+        type: array
+    type: object
+  dto.SortingOutput:
+    properties:
+      data:
+        $ref: '#/definitions/entity.Benchmark'
+      message:
+        type: string
+    type: object
+  entity.Benchmark:
+    properties:
+      benchmark_type:
+        $ref: '#/definitions/entity.BenchmarkType'
+      created_at:
+        type: string
+      data:
+        items:
+          type: integer
+        type: array
+      faster:
+        $ref: '#/definitions/entity.Result'
+      id:
+        type: string
+      results:
+        items:
+          $ref: '#/definitions/entity.Result'
+        type: array
+      slower:
+        $ref: '#/definitions/entity.Result'
+    type: object
+  entity.BenchmarkType:
+    enum:
+    - sorting_algorithm
+    - serialization
+    type: string
+    x-enum-varnames:
+    - SortingAlgorithm
+    - Serialization
+  entity.Result:
+    properties:
+      duration:
+        type: integer
+      name:
+        type: string
+    type: object
+  errors.Http:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /health:
+    get:
+      consumes:
+      - application/json
+      description: do ping
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      summary: Verify api connection
+      tags:
+      - Health
+  /sort:
+    post:
+      consumes:
+      - application/json
+      description: Sorts an array based on the input sorting algorithm provided in
+        the request body
+      parameters:
+      - description: Sorting input
+        in: body
+        name: sortingInput
+        required: true
+        schema:
+          $ref: '#/definitions/dto.SortingInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.SortingOutput'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/errors.Http'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/errors.Http'
+      summary: Sort an array using the specified algorithm
+      tags:
+      - Sorting Algorithms
+swagger: "2.0"
